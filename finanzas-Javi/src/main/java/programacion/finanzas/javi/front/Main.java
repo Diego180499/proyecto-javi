@@ -1,4 +1,4 @@
-package programacion.finanzas.javi.main;
+package programacion.finanzas.javi.front;
 
 public class Main extends javax.swing.JFrame {
 
