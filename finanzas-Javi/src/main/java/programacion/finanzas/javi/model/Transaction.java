@@ -1,21 +1,20 @@
-
 package programacion.finanzas.javi.model;
 
-import java.util.Date;
+import programacion.finanzas.javi.enumType.TransactionType;
 
 public class Transaction {
-    
-    private Date date;
+
+    private String date;
     private String category;
     private String subCategory;
     private String description;
     private String coment;
     private String image;
-    private int amount;
-    private int balance;
-    private String type;
+    private double amount;
+    private double balance;
+    private TransactionType type;
 
-    public Transaction(Date date, String category, String subCategory, String description, String coment, String image, int amount, int balance, String type) {
+    public Transaction(String date, String category, String subCategory, String description, String coment, String image, double amount, double balance, TransactionType type) {
         this.date = date;
         this.category = category;
         this.subCategory = subCategory;
@@ -27,15 +26,11 @@ public class Transaction {
         this.type = type;
     }
 
-    
-    
-    
-
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -79,33 +74,37 @@ public class Transaction {
         this.image = image;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
     public void setAmount(int amount) {
         this.amount = amount;
     }
 
-    public int getBalance() {
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public double getBalance() {
         return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public void setBalance(int balance) {
         this.balance = balance;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
-    
-    
-    
-    
     
     
 }
