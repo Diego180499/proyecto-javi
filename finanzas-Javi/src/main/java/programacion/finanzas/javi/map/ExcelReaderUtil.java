@@ -25,7 +25,8 @@ import programacion.finanzas.javi.model.Transaction;
  *
  * @author HP
  */
-public class TransactionMap {
+//ExcelReaderUtil.java
+public class ExcelReaderUtil {
 
     //metodo static que extrae el contenido del archivo Excel
     private static ArrayList<ArrayList<String>> getValueCells(String path) {
@@ -33,29 +34,29 @@ public class TransactionMap {
             Workbook workbook = WorkbookFactory.create(new File(path));
 
             //Iterator<Sheet> hoja = workbook.sheetIterator();  arreglo de hojas del archivo excel
-            Sheet hoja = workbook.getSheetAt(0); //nos devuelve la primer hoja del archivo de Excel
-            Iterator<Row> filas = hoja.rowIterator(); //obtenemos las filas de la hoja
+            Sheet sheet = workbook.getSheetAt(0); //nos devuelve la primer hoja del archivo de Excel
+            Iterator<Row> rowIterator = sheet.rowIterator(); //obtenemos las filas de la hoja
 
-            ArrayList<ArrayList<String>> arrayFilas = new ArrayList<>(); //este arreglo contiene cada fila, de izquierda a derecha
+            var rows = new  ArrayList<ArrayList<String>>(); //este arreglo contiene cada fila, de izquierda a derecha
 
             //iteramos sobre cada fila
-            while (filas.hasNext()) {
-                Row fila = filas.next(); //obtenemos una fila
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next(); //obtenemos una fila
 
-                Iterator<Cell> celdas = fila.cellIterator();//obtenemos las celdas usadas por fila
+                Iterator<Cell> cellIterator = row.cellIterator();//obtenemos las celdas usadas por fila
 
-                ArrayList<String> valueCeldas = new ArrayList<>(); //este array contiene los valores de cada celda de las filas
+                var cellsValues = new ArrayList<String>(); //este array contiene los valores de cada celda de las filas
 
                 //iteramos sobre las celdas de una fila
-                while (celdas.hasNext()) {
-                    Cell celda = celdas.next();//obtenemos cada celda(o columna) de una fila
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();//obtenemos cada celda(o columna) de una fila
                     DataFormatter dataFormatter = new DataFormatter();
-                    String valor = dataFormatter.formatCellValue(celda);
-                    valueCeldas.add(valor);
+                    String valor = dataFormatter.formatCellValue(cell);
+                    cellsValues.add(valor);
                 }
-                arrayFilas.add(valueCeldas);
+                rows.add(cellsValues);
             }
-            return arrayFilas;
+            return rows;
         } catch (IOException ex) {
             ex.getStackTrace();
             throw new AppException("Error en el archivo");
@@ -76,28 +77,37 @@ public class TransactionMap {
     }
 
     //Método que mapea los datos en String y los convierte a un array de objetos de tipo Transaction
-    public static ArrayList<Transaction> mapToTransactions(String path) {
+    public static ArrayList<Transaction> fromExcelToTransactions(String path) {
         ArrayList<ArrayList<String>> filas = getValueCells(path);
         ArrayList<Transaction> transactions = new ArrayList<>();
 
         for (int i = 1; i < filas.size(); i++) {
-            if (filas.get(i).size() >= 9) {
-                String date = filas.get(i).get(0);
-                String category = filas.get(i).get(1);
-                String subCategory = filas.get(i).get(2);
-                String description = filas.get(i).get(3);
-                String coment = filas.get(i).get(4);
-                String image = filas.get(i).get(5);
-                String importe = filas.get(i).get(6).replaceAll(",", ""); //quitamos la coma por si es un numero como 1,500.00
-                String saldo = filas.get(i).get(7).replaceAll(",", ""); //quitamos la coma por si es un numero como 1,500.00
-                Double amount = Double.valueOf(importe);
-                Double balance = Double.valueOf(saldo);
-                TransactionType type = getTransactionType(filas.get(i).get(8));
-
-                Transaction transaction = new Transaction(date, category, subCategory, description, coment, image, amount, balance, type);
-                transactions.add(transaction);
+            ArrayList<String> row = filas.get(i);
+            if (!isRowValid(row)) {
+                continue;
             }
+
+            String date = row.get(0);
+            String category = row.get(1);
+            String subCategory = row.get(2);
+            String description = row.get(3);
+            String coment = row.get(4);
+            String image = row.get(5);
+            String importe = row.get(6).replaceAll(",", ""); //quitamos la coma por si es un numero como 1,500.00
+            String saldo = row.get(7).replaceAll(",", ""); //quitamos la coma por si es un numero como 1,500.00
+            Double amount = Double.valueOf(importe);
+            Double balance = Double.valueOf(saldo);
+            TransactionType type = getTransactionType(filas.get(i).get(8));
+
+            Transaction transaction = new Transaction(date, category, subCategory, description, coment, image, amount, balance, type);
+            transactions.add(transaction);
+
         }
         return transactions;
+    }
+
+    private static boolean isRowValid(ArrayList<String> row) {
+        return row.size() >= 9;
+
     }
 }
