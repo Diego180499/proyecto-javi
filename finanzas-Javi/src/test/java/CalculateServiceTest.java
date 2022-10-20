@@ -18,14 +18,13 @@ public class CalculateServiceTest {
     @Test
     public void calculateTransactions_whenFileNotExists() {
         CalculateService calculateService = new CalculateService();
-        assertThrows(AppException.class, () -> calculateService.calculateTransactions("C:\\Users\\HP\\Proyectos Programacion\\Java\\Proyecto Finanzas Javi\\docs\\Movements.xls"));
+        assertThrows(AppException.class, () -> calculateService.calculateTransactions("C:\\Users\\HP\\Proyectos Programacion\\Java\\Proyecto Finanzas Javi\\docs\\Mov.xls"));
 
     }
-    
-   @Test
+
+    @Test
     public void calculateTransactions_whenFileExists() {
         CalculateService calculateService = new CalculateService();
         calculateService.calculateTransactions("C:\\Users\\HP\\Proyectos Programacion\\Java\\Proyecto Finanzas Javi\\docs\\Movements.xls");
     }
-
 }
