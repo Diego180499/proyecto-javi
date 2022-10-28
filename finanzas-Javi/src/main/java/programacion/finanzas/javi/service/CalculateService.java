@@ -13,9 +13,9 @@ public class CalculateService {
     }
 
     //metodo para calcular los gastos, ingresos y pagos
-    public ArrayList<Double> calculateTransactions(String path) throws AppException {
+    public ArrayList<Double> calculateTransactions(String path, int numberColumn, String referencePayment,String referenceSpent, String referenceEntry) throws AppException {
 
-        ArrayList<Transaction> transactions = ExcelReaderUtil.fromExcelToTransactions(path);
+        ArrayList<Transaction> transactions = ExcelReaderUtil.fromExcelToTransactions(path,numberColumn, referencePayment, referenceSpent, referenceEntry);
 
         Double initialBalance = transactions.get(transactions.size() - 1).getBalance();
         Double entries = getTotalByType(transactions, TransactionType.ENTRY);
